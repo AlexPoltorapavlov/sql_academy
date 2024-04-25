@@ -6,4 +6,3 @@
 
 psql -f exercise.sql
 
-```

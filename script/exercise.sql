@@ -42,3 +42,4 @@ DELETE FROM users WHERE user_id = 2;
 
 -- При помощи EXPLAIN выявление узких мест в запросе выборки сообщений пользователя
 EXPLAIN SELECT * FROM messages WHERE user_id = 1;
+
