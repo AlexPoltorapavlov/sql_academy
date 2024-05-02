@@ -4,6 +4,6 @@
 
 ```bash
 
-psql -f exercise.sql
+psql -f script/exercise.sql
 
 ``
