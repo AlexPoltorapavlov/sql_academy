@@ -48,3 +48,4 @@ CREATE INDEX msg_user_idx ON Messages (user_id);
 EXPLAIN ANALYZE SELECT email, msg FROM Users 
     JOIN Messages ON Messages.user_id = Users.id
     WHERE email = 'example3@domen.name';
+
