@@ -7,38 +7,45 @@ CREATE DATABASE exercise_db;
 \c exercise_db;
 
 -- Создание таблицы пользователей
-CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    username VARCHAR(100) UNIQUE NOT NULL,
+CREATE TABLE Users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(100) NOT NULL
 );
 
 -- Создание таблицы сообщений
-CREATE TABLE messages (
-    message_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-    message VARCHAR(1000) NOT NULL
+CREATE TABLE Messages (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES Users(id) ON DELETE CASCADE,
+    msg VARCHAR(1000) NOT NULL
 );
 
 -- Заполнение таблиц данными
-INSERT INTO users (username, password) VALUES ('user1', 'password1'), ('user2', 'password2');
+INSERT INTO Users (email, password) VALUES ('example1@domen.name', 'password1'), ('example2@domen.name', 'password2');
 
-INSERT INTO messages (user_id, message) VALUES (1, 'Hello from user1'), (2, 'Hello from user2'), (1, 'Another message from user1');
+INSERT INTO Messages (user_id, msg) VALUES (1, 'Hello from user1'), (2, 'Hello from user2'), (1, 'Another message from user1');
 
 -- Обновление данных пользователя
-UPDATE users SET password = 'newpassword1' WHERE username = 'user1';
+UPDATE Users SET email = 'example3@domen.name' WHERE email = 'example1@domen.name';
 
 -- Удаление одного сообщения
-DELETE FROM messages WHERE message='Hello from user2';
+DELETE FROM messages WHERE id= 1;
 
 -- Выборка сообщений, которые есть только у одного пользователя
-SELECT m.*
-FROM messages m
-JOIN users u ON u.user_id = m.user_id
-WHERE u.username = 'user1';
+SELECT email, msg FROM Users 
+    JOIN Messages ON Messages.user_id = Users.id
+    WHERE email = 'example3@domen.name';
 
 -- Удаление одного пользователя
-DELETE FROM users WHERE user_id = 2;
+DELETE FROM Users WHERE id = 2;
 
--- При помощи EXPLAIN выявление узких мест в запросе выборки сообщений пользователя
-EXPLAIN SELECT * FROM messages WHERE user_id = 1;
+EXPLAIN SELECT email, msg FROM Users 
+    JOIN Messages ON Messages.user_id = Users.id
+    WHERE email = 'example3@domen.name';
+
+CREATE INDEX msg_user_idx ON Messages (user_id);
+
+EXPLAIN ANALYZE SELECT email, msg FROM Users 
+    JOIN Messages ON Messages.user_id = Users.id
+    WHERE email = 'example3@domen.name';
+
